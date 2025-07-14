@@ -1,3 +1,54 @@
+// --- Chatbot: Send requests to Worker endpoint ---
+// Example Worker endpoint URL (replace with your actual endpoint)
+const WORKER_ENDPOINT = "https://flat-night-6fb4.raubcc.workers.dev/api/chat";
+
+// Get chat input and window (if present)
+const userInput = document.getElementById("userInput");
+const sendBtn = document.getElementById("sendBtn");
+const chatWindow = document.getElementById("chatWindow");
+
+// Send chat request to Worker and display response
+async function sendChatMessage(message) {
+  // Show user message
+  if (chatWindow) {
+    chatWindow.innerHTML += `<div class="user-msg">${message}</div>`;
+  }
+  // Send to Worker endpoint
+  try {
+    const response = await fetch(WORKER_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message }),
+    });
+    const data = await response.json();
+    // Show bot response
+    if (chatWindow && data && data.reply) {
+      chatWindow.innerHTML += `<div class="bot-msg">${data.reply}</div>`;
+    }
+  } catch (err) {
+    if (chatWindow) {
+      chatWindow.innerHTML += `<div class="bot-msg error">Sorry, the radio comms are down in the pit lane!</div>`;
+    }
+  }
+}
+
+// Handle chat form submit
+if (userInput && sendBtn && chatWindow) {
+  sendBtn.onclick = (e) => {
+    e.preventDefault();
+    const msg = userInput.value.trim();
+    if (msg) {
+      sendChatMessage(msg);
+      userInput.value = "";
+    }
+  };
+  userInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      sendBtn.click();
+    }
+  });
+}
 // --- Radio Console Search & Team Radio Share ---
 const productSearch = document.getElementById("product-search");
 const searchBtn = document.getElementById("search-btn");
