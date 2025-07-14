@@ -128,9 +128,32 @@
             </div>
         </section>
     </main>
+
     <footer>
         <p>&copy; 2025 L'Oréal. All rights reserved.</p>
     </footer>
+
+    <!-- Floating Chat Window -->
+    <div id="floating-chat-container" style="position:fixed;bottom:24px;right:24px;z-index:9999;max-width:340px;width:92vw;">
+      <div id="chatWindow" style="background:#fff;border-radius:16px 16px 0 0;box-shadow:0 4px 24px #0002;min-height:120px;max-height:320px;overflow-y:auto;padding:16px 12px 8px 12px;font-size:1em;"></div>
+      <form id="chatForm" style="display:flex;align-items:center;background:#fff;border-radius:0 0 16px 16px;box-shadow:0 2px 8px #0001;padding:8px 8px 8px 12px;gap:6px;">
+        <label for="userInput" class="visually-hidden">Message</label>
+        <input
+          id="userInput"
+          name="userInput"
+          type="text"
+          placeholder="Ask me about products or routines…"
+          autocomplete="off"
+          required
+          style="flex:1;padding:8px 12px;border-radius:12px;border:1.5px solid #eee;font-size:1em;outline:none;"
+        />
+        <button type="submit" id="sendBtn" style="background:#ff003b;color:#fff;border:none;border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;font-size:1.2em;cursor:pointer;">
+          <i class="fa-solid fa-paper-plane"></i>
+          <span class="visually-hidden">Send</span>
+        </button>
+      </form>
+    </div>
+
     <script src="script.js"></script>
     <script>
       // RTL toggle logic
@@ -148,37 +171,5 @@
         };
       }
     </script>
-</body>
-          <label for="userInput" class="visually-hidden">Message</label>
-          <input
-            id="userInput"
-            name="userInput"
-            type="text"
-            placeholder="Ask me about products or routines…"
-            autocomplete="off"
-            required
-          />
-          <button type="submit" id="sendBtn">
-            <i class="fa-solid fa-paper-plane"></i>
-            <span class="visually-hidden">Send</span>
-          </button>
-        </form>
-      </section>
-
-      <!------- Footer Links ------->
-      <footer class="site-footer">
-        <p>&copy; 2025 L'Oréal. All rights reserved.</p>
-        <nav>
-          <!-- These URLs are placeholders -->
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms of Use</a>
-          <a href="#">Contact</a>
-        </nav>
-      </footer>
-    </div>
-
-    <!-- secrets.js can be removed when using Cloudflare Workers for API requests -->
-    <script src="secrets.js"></script>
-    <script src="script.js"></script>
   </body>
 </html>
