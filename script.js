@@ -32,8 +32,37 @@ const crewPersonas = {
 
 // 4. Track which steps are complete (for demo, start with none complete)
 let completedSteps = 0;
+let routineStarted = false;
+
+// Pit stop tips for each step
+const pitStopTips = [
+  "Need a hydration boost? Add a serum at this pit stop!",
+  "Want extra glow? Try a vitamin C serum!",
+  "Lock in moisture for a smooth finish!",
+  "Don't forget SPF for the win!",
+];
+
+// Reference to overtake animation container
+const overtakeAnimation = document.getElementById("overtake-animation");
+
+// Start Your Engines button
+const startBtn = document.getElementById("start-engines-btn");
+if (startBtn) {
+  startBtn.addEventListener("click", () => {
+    routineStarted = true;
+    completedSteps = 0;
+    // Hide the button after starting
+    startBtn.style.display = "none";
+    // Start the routine progress
+    renderRaceTrack();
+    showFlag();
+    updateSpeedometer();
+    demoProgress();
+  });
+}
 
 // 5. Show the race track with checkpoints
+
 function renderRaceTrack() {
   raceTrack.innerHTML = "";
   routineSteps.forEach((stepObj, idx) => {
@@ -46,11 +75,43 @@ function renderRaceTrack() {
       div.classList.add("complete");
     } else if (idx === completedSteps) {
       div.classList.add("active");
+      // Show pit stop tip for current step
+      showPitStopTip(idx, div);
     }
-    // Tooltip for step name
-    div.title = stepObj.step;
+    // Tooltip for step name, now with Lap X: StepName
+    div.title = `Lap ${idx + 1}: ${stepObj.step}`;
+    // Add lap label below each checkpoint
+    const lapLabel = document.createElement("div");
+    lapLabel.style.fontSize = "0.95em";
+    lapLabel.style.color = "gold";
+    lapLabel.style.textAlign = "center";
+    lapLabel.style.marginTop = "6px";
+    lapLabel.textContent = `Lap ${idx + 1}: ${stepObj.step}`;
+    div.appendChild(lapLabel);
     raceTrack.appendChild(div);
   });
+}
+
+// Show a quick pit stop tip above the current checkpoint
+function showPitStopTip(idx, checkpointDiv) {
+  // Remove any existing tip
+  const oldTip = document.querySelector(".pit-stop-tip");
+  if (oldTip) oldTip.remove();
+  // Create tip
+  const tip = document.createElement("div");
+  tip.className = "pit-stop-tip";
+  tip.textContent = pitStopTips[idx] || "";
+  // Position tip above the checkpoint
+  checkpointDiv.style.position = "relative";
+  tip.style.position = "absolute";
+  tip.style.left = "50%";
+  tip.style.top = "-48px";
+  tip.style.transform = "translateX(-50%)";
+  checkpointDiv.appendChild(tip);
+  // Remove tip after 2 seconds
+  setTimeout(() => {
+    tip.remove();
+  }, 2000);
 }
 
 // 6. Show flag animation based on routine state
@@ -108,10 +169,15 @@ function renderProductCards(products) {
 // 10. Simulate product conflict (for yellow flag demo)
 let hasProductConflict = false;
 
-// 11. Demo: advance routine step every 2 seconds
+// 11. Demo: advance routine step every 2 seconds (only after start)
 function demoProgress() {
+  if (!routineStarted) return;
   setTimeout(() => {
     if (completedSteps < routineSteps.length) {
+      // Simulate an overtake if user adds a better product (step 2 for demo)
+      if (completedSteps === 1) {
+        showOvertakeAnimation("Glow Specialist overtakes for the lead!");
+      }
       completedSteps++;
       // Simulate a conflict at step 2
       hasProductConflict = completedSteps === 2;
@@ -127,6 +193,16 @@ function demoProgress() {
   }, 2000);
 }
 
+// Show overtake animation (mini pop-up)
+function showOvertakeAnimation(message) {
+  if (!overtakeAnimation) return;
+  overtakeAnimation.innerHTML = `<span class="overtake-effect">${message}</span>`;
+  // Remove after animation
+  setTimeout(() => {
+    overtakeAnimation.innerHTML = "";
+  }, 1100);
+}
+
 // 12. Initialize UI
 async function init() {
   renderRaceTrack();
@@ -139,7 +215,7 @@ async function init() {
     .map((cat) => products.find((p) => p.category === cat))
     .filter(Boolean);
   renderProductCards(pitCrewProducts);
-  demoProgress(); // Remove or replace with real logic later
+  // Wait for user to start engines
 }
 
 // Run the UI setup

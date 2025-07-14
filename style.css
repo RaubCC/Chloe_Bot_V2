@@ -1,3 +1,102 @@
+/* Start Your Engines Button */
+#start-section {
+  display: flex;
+  justify-content: center;
+  margin: 32px 0 12px 0;
+}
+.start-btn {
+  background: linear-gradient(90deg, #ff003b 60%, gold 100%);
+  color: #fff;
+  font-size: 1.3em;
+  font-weight: bold;
+  border: none;
+  border-radius: 30px;
+  padding: 16px 38px;
+  box-shadow: 0 2px 12px #ff003b44;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: background 0.2s, transform 0.2s;
+  outline: none;
+}
+.start-btn:hover,
+.start-btn:focus {
+  background: linear-gradient(90deg, gold 60%, #ff003b 100%);
+  color: #222;
+  transform: scale(1.06) rotate(-2deg);
+}
+
+/* Pit Stop Tips */
+.pit-stop-tip {
+  position: absolute;
+  top: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fffbe7;
+  color: #ff003b;
+  border: 2px solid gold;
+  border-radius: 12px;
+  padding: 6px 18px;
+  font-size: 1em;
+  font-weight: 500;
+  box-shadow: 0 2px 8px #0001;
+  z-index: 10;
+  white-space: nowrap;
+  opacity: 0.95;
+  pointer-events: none;
+  animation: pitstop-pop 0.7s;
+}
+@keyframes pitstop-pop {
+  0% {
+    transform: translateX(-50%) scale(0.7);
+    opacity: 0;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-50%) scale(1);
+    opacity: 0.95;
+  }
+}
+
+/* Overtake Animation */
+#overtake-animation {
+  position: absolute;
+  left: 50%;
+  top: 10px;
+  transform: translateX(-50%);
+  z-index: 20;
+  pointer-events: none;
+}
+.overtake-effect {
+  display: inline-block;
+  background: gold;
+  color: #ff003b;
+  font-weight: bold;
+  font-size: 1.2em;
+  border-radius: 16px;
+  padding: 8px 22px;
+  box-shadow: 0 2px 12px #ff003b44;
+  border: 2px solid #ff003b;
+  animation: overtake-zoom 1.1s cubic-bezier(0.4, 2, 0.6, 1);
+}
+@keyframes overtake-zoom {
+  0% {
+    transform: scale(0.7) translateY(-30px);
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  80% {
+    transform: scale(1.1) translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) translateY(-30px);
+    opacity: 0;
+  }
+}
 /* —— basic reset —— */
 * {
   box-sizing: border-box;
