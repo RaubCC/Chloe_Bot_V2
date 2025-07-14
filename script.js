@@ -19,8 +19,11 @@ async function sendChatMessage(message) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization:
-          "Bearer pmpt_6871588c60848197b75a0d59ce945e2805634bcdbbfa9b7b",
+        Authorization: `Bearer ${
+          typeof API_KEY !== "undefined"
+            ? API_KEY
+            : "pmpt_6871588c60848197b75a0d59ce945e2805634bcdbbfa9b7b"
+        }`,
       },
       body: JSON.stringify({ message }),
     });
@@ -187,8 +190,11 @@ function showQuizQuestion(idx) {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
-                  Authorization:
-                    "Bearer pmpt_6871588c60848197b75a0d59ce945e2805634bcdbbfa9b7b",
+                  Authorization: `Bearer ${
+                    typeof API_KEY !== "undefined"
+                      ? API_KEY
+                      : "pmpt_6871588c60848197b75a0d59ce945e2805634bcdbbfa9b7b"
+                  }`,
                 },
                 body: JSON.stringify({
                   products: selectedProducts,
