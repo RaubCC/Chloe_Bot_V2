@@ -17,7 +17,11 @@ async function sendChatMessage(message) {
   try {
     const response = await fetch(WORKER_ENDPOINT, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization:
+          "Bearer pmpt_6871588c60848197b75a0d59ce945e2805634bcdbbfa9b7b",
+      },
       body: JSON.stringify({ message }),
     });
     const data = await response.json();
@@ -143,7 +147,68 @@ function showQuizQuestion(idx) {
     // Quiz complete, pick a team
     quizTeam = pickQuizTeam();
     quizQuestionsDiv.innerHTML = `<div style='color:#ff003b;font-weight:bold;'>You’re on Team ${quizTeam}!</div>`;
+    // Add Generate Routine button
+    quizQuestionsDiv.innerHTML += `<button id='generate-routine-btn' class='start-btn' style='margin-top:18px;'>Generate Routine</button>`;
     quizStartBtn.style.display = "none";
+    // Add event listener after rendering
+    setTimeout(() => {
+      const genBtn = document.getElementById("generate-routine-btn");
+      if (genBtn) {
+        genBtn.onclick = async () => {
+          // Collect selected products (for demo, use pitCrewProducts or all main routine steps)
+          // In a real app, you would let users select products. Here, we use the main routine demo products.
+          const products = allProducts.length
+            ? allProducts
+            : await loadProducts();
+          const mainCategories = [
+            "cleanser",
+            "skincare",
+            "moisturizer",
+            "suncare",
+          ];
+          const selectedProducts = mainCategories
+            .map((cat) => products.find((p) => p.category === cat))
+            .filter(Boolean)
+            .map((p) => ({
+              name: p.name,
+              brand: p.brand,
+              category: p.category,
+              description: p.description,
+            }));
+          // Send to OpenAI/Worker endpoint for routine generation
+          if (selectedProducts.length && chatWindow) {
+            chatWindow.innerHTML += `<div class="user-msg">Generate a personalized routine for me using these products:</div>`;
+            chatWindow.innerHTML += `<div class="user-msg" style="font-size:0.95em;background:#fffbe7;color:#222;">${selectedProducts
+              .map((p) => `<b>${p.name}</b> (${p.brand})`)
+              .join(", ")}</div>`;
+            // Call Worker endpoint
+            try {
+              const response = await fetch(WORKER_ENDPOINT, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization:
+                    "Bearer pmpt_6871588c60848197b75a0d59ce945e2805634bcdbbfa9b7b",
+                },
+                body: JSON.stringify({
+                  products: selectedProducts,
+                  message:
+                    "Generate a personalized skincare routine using only these products.",
+                }),
+              });
+              const data = await response.json();
+              if (data && data.reply) {
+                chatWindow.innerHTML += `<div class="bot-msg">${data.reply}</div>`;
+              } else {
+                chatWindow.innerHTML += `<div class="bot-msg error">Sorry, the pit crew couldn't generate your routine.</div>`;
+              }
+            } catch (err) {
+              chatWindow.innerHTML += `<div class="bot-msg error">Sorry, the radio comms are down in the pit lane!</div>`;
+            }
+          }
+        };
+      }
+    }, 100);
     return;
   }
   const q = quizQuestions[idx];
