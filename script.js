@@ -7,13 +7,50 @@ const userInput = document.getElementById("userInput");
 const sendBtn = document.getElementById("sendBtn");
 const chatWindow = document.getElementById("chatWindow");
 
+// Store chat history for context-aware responses
+let chatHistory = [];
+
+// Allowed topics for follow-up questions
+const allowedTopics = [
+  "routine",
+  "skincare",
+  "haircare",
+  "makeup",
+  "fragrance",
+  "product",
+  "beauty",
+  "step",
+  "pit crew",
+  "lap",
+  "spf",
+  "hydration",
+  "glow",
+  "serum",
+  "moisturizer",
+  "cleanser",
+  "suncare",
+  "treatment",
+  "men's grooming",
+];
+
 // Send chat request to Worker and display response
 async function sendChatMessage(message) {
+  // Only allow questions about the routine or beauty topics
+  const lowerMsg = message.toLowerCase();
+  const isAllowed = allowedTopics.some((topic) => lowerMsg.includes(topic));
+  if (!isAllowed && chatHistory.length > 0) {
+    if (chatWindow) {
+      chatWindow.innerHTML += `<div class="bot-msg error">Please ask about your routine or beauty topics (skincare, haircare, makeup, fragrance, etc.).</div>`;
+    }
+    return;
+  }
   // Show user message
   if (chatWindow) {
     chatWindow.innerHTML += `<div class="user-msg">${message}</div>`;
   }
-  // Send to Worker endpoint
+  // Add to chat history
+  chatHistory.push({ role: "user", content: message });
+  // Send to Worker endpoint with full history
   try {
     const response = await fetch(WORKER_ENDPOINT, {
       method: "POST",
@@ -25,12 +62,16 @@ async function sendChatMessage(message) {
             : "pmpt_6871588c60848197b75a0d59ce945e2805634bcdbbfa9b7b"
         }`,
       },
-      body: JSON.stringify({ message }),
+      body: JSON.stringify({
+        history: chatHistory,
+        message,
+      }),
     });
     const data = await response.json();
     // Show bot response
     if (chatWindow && data && data.reply) {
       chatWindow.innerHTML += `<div class="bot-msg">${data.reply}</div>`;
+      chatHistory.push({ role: "assistant", content: data.reply });
     }
   } catch (err) {
     if (chatWindow) {
@@ -121,6 +162,27 @@ const quizCloseBtn = document.getElementById("quiz-close-btn");
 // Array to keep track of selected product IDs
 let selectedProductIds = [];
 
+// Load selected products from localStorage if available
+function loadSelectedProductsFromStorage() {
+  const saved = localStorage.getItem("selectedProductIds");
+  if (saved) {
+    try {
+      const arr = JSON.parse(saved);
+      if (Array.isArray(arr)) {
+        selectedProductIds = arr;
+      }
+    } catch (e) {}
+  }
+}
+
+// Save selected products to localStorage
+function saveSelectedProductsToStorage() {
+  localStorage.setItem(
+    "selectedProductIds",
+    JSON.stringify(selectedProductIds)
+  );
+}
+
 // Store all products for lookup
 let allProducts = [];
 
@@ -128,10 +190,35 @@ let allProducts = [];
 function renderSelectedProducts() {
   const list = document.getElementById("selected-products-list");
   list.innerHTML = "";
+  const section = document.getElementById("selected-products-section");
+  // Add clear all button if there are selections
+  let clearBtn = document.getElementById("clear-selected-btn");
   if (selectedProductIds.length === 0) {
     list.innerHTML =
       '<li style="color:#888;font-size:0.98em;">No products selected yet.</li>';
+    if (clearBtn) clearBtn.style.display = "none";
     return;
+  }
+  if (!clearBtn && section) {
+    clearBtn = document.createElement("button");
+    clearBtn.id = "clear-selected-btn";
+    clearBtn.textContent = "Clear All";
+    clearBtn.style.background = "#222";
+    clearBtn.style.color = "gold";
+    clearBtn.style.border = "none";
+    clearBtn.style.borderRadius = "16px";
+    clearBtn.style.padding = "4px 16px";
+    clearBtn.style.margin = "0 0 10px 0";
+    clearBtn.style.cursor = "pointer";
+    section.insertBefore(clearBtn, list);
+    clearBtn.onclick = () => {
+      selectedProductIds = [];
+      saveSelectedProductsToStorage();
+      renderSelectedProducts();
+      updateProductCardHighlights();
+    };
+  } else if (clearBtn) {
+    clearBtn.style.display = "inline-block";
   }
   selectedProductIds.forEach((id) => {
     const product = allProducts.find((p) => p.id === id);
@@ -164,6 +251,7 @@ function toggleProductSelection(productId) {
   } else {
     selectedProductIds.splice(idx, 1);
   }
+  saveSelectedProductsToStorage();
   renderSelectedProducts();
   updateProductCardHighlights();
 }
@@ -197,6 +285,12 @@ function renderProductCards(products) {
     const card = document.createElement("div");
     card.className = "product-card";
     card.setAttribute("data-id", product.id);
+    card.setAttribute("tabindex", "0");
+    card.setAttribute("role", "button");
+    card.setAttribute(
+      "aria-pressed",
+      selectedProductIds.includes(product.id) ? "true" : "false"
+    );
     card.style.cursor = "pointer";
     card.innerHTML = `
       <img src="${product.image}" alt="${product.name}" style="width:60px;height:60px;object-fit:cover;border-radius:12px;box-shadow:0 2px 8px #0002;">
@@ -211,6 +305,13 @@ function renderProductCards(products) {
     card.addEventListener("click", () => {
       toggleProductSelection(product.id);
     });
+    // Keyboard accessibility (space/enter)
+    card.addEventListener("keydown", (e) => {
+      if (e.key === " " || e.key === "Enter") {
+        e.preventDefault();
+        toggleProductSelection(product.id);
+      }
+    });
     container.appendChild(card);
   });
   updateProductCardHighlights();
@@ -220,6 +321,7 @@ function renderProductCards(products) {
 // On page load, ensure selected products section is rendered
 // ===============================
 document.addEventListener("DOMContentLoaded", () => {
+  loadSelectedProductsFromStorage();
   renderSelectedProducts();
 });
 

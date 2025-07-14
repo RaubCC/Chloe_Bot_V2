@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>L'Oréal | Smart Routine &amp; Product Advisor</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&display=swap"
@@ -17,6 +17,10 @@
 
   <body>
     <div class="page-wrapper">
+      <!-- RTL Toggle Button -->
+      <div style="text-align:right;padding:8px 16px 0 0;">
+        <button id="rtl-toggle" style="background:#ff003b;color:#fff;border:none;border-radius:16px;padding:4px 16px;cursor:pointer;font-size:0.98em;">Switch to RTL</button>
+      </div>
       <!------- Header / Branding ------->
       <header class="site-header">
         <img src="img/loreal-logo.png" alt="L'Oréal Logo" class="logo" />
@@ -113,7 +117,7 @@
               <input id="product-search" type="text" placeholder="Radio Comms: Search for a product…" style="width:260px;padding:10px 16px;border-radius:18px 0 0 18px;border:2px solid #ff003b;font-size:1em;outline:none;">
               <button id="search-btn" style="background:#ff003b;color:#fff;padding:10px 18px;border:none;border-radius:0 18px 18px 0;font-size:1.1em;font-weight:bold;cursor:pointer;">🔊</button>
             </div>
-            <div id="product-cards">
+            <div id="product-cards" aria-label="Product selection grid" tabindex="0">
                 <!-- Product cards will be added by JS -->
             </div>
             <!-- Selected Products Section -->
@@ -128,6 +132,22 @@
         <p>&copy; 2025 L'Oréal. All rights reserved.</p>
     </footer>
     <script src="script.js"></script>
+    <script>
+      // RTL toggle logic
+      const rtlToggle = document.getElementById('rtl-toggle');
+      const htmlEl = document.documentElement;
+      if (rtlToggle) {
+        rtlToggle.onclick = function() {
+          if (htmlEl.getAttribute('dir') === 'rtl') {
+            htmlEl.setAttribute('dir', 'ltr');
+            rtlToggle.textContent = 'Switch to RTL';
+          } else {
+            htmlEl.setAttribute('dir', 'rtl');
+            rtlToggle.textContent = 'Switch to LTR';
+          }
+        };
+      }
+    </script>
 </body>
           <label for="userInput" class="visually-hidden">Message</label>
           <input
