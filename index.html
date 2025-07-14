@@ -53,7 +53,9 @@
             <div id="quiz-questions">
               <!-- Quiz questions will be added by JS -->
             </div>
+            <div id="quiz-result" style="display:none;margin:18px 0 0 0;"></div>
             <button id="quiz-start-btn" class="start-btn">Start Quiz</button>
+            <button id="quiz-retake-btn" class="start-btn" style="display:none;background:#222;color:gold;">Retake Quiz</button>
             <button id="quiz-close-btn" class="start-btn" style="background:#222;color:gold;">Close</button>
           </div>
         </div>
@@ -112,10 +114,12 @@
         <!-- Pit Crew Product Cards -->
         <section id="products-section">
             <h2>Pit Crew Products</h2>
-            <!-- Radio Console Search Bar -->
-            <div id="radio-search-bar" style="display:flex;justify-content:center;align-items:center;margin-bottom:18px;">
-              <input id="product-search" type="text" placeholder="Radio Comms: Search for a product…" style="width:260px;padding:10px 16px;border-radius:18px 0 0 18px;border:2px solid #ff003b;font-size:1em;outline:none;">
-              <button id="search-btn" style="background:#ff003b;color:#fff;padding:10px 18px;border:none;border-radius:0 18px 18px 0;font-size:1.1em;font-weight:bold;cursor:pointer;">🔊</button>
+            <!-- Radio Console Search Bar (right justified) -->
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 18px;">
+              <div id="radio-search-bar">
+                <input id="product-search" type="text" placeholder="Radio Comms: Search for a product…">
+                <button id="search-btn">🔊</button>
+              </div>
             </div>
             <div id="product-cards" aria-label="Product selection grid" tabindex="0">
                 <!-- Product cards will be added by JS -->

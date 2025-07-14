@@ -155,6 +155,9 @@ const trophyPodium = document.getElementById("trophy-podium");
 const quizModal = document.getElementById("quiz-modal");
 const quizStartBtn = document.getElementById("quiz-start-btn");
 const quizCloseBtn = document.getElementById("quiz-close-btn");
+const quizRetakeBtn = document.getElementById("quiz-retake-btn");
+
+const quizResultDiv = document.getElementById("quiz-result");
 // ===============================
 // Product Selection Logic
 // ===============================
@@ -179,143 +182,7 @@ function loadSelectedProductsFromStorage() {
 function saveSelectedProductsToStorage() {
   localStorage.setItem(
     "selectedProductIds",
-    JSON.stringify(selectedProductIds)
-  );
-}
 
-// Store all products for lookup
-let allProducts = [];
-
-// Helper: Render the selected products list
-function renderSelectedProducts() {
-  const list = document.getElementById("selected-products-list");
-  list.innerHTML = "";
-  const section = document.getElementById("selected-products-section");
-  // Add clear all button if there are selections
-  let clearBtn = document.getElementById("clear-selected-btn");
-  if (selectedProductIds.length === 0) {
-    list.innerHTML =
-      '<li style="color:#888;font-size:0.98em;">No products selected yet.</li>';
-    if (clearBtn) clearBtn.style.display = "none";
-    return;
-  }
-  if (!clearBtn && section) {
-    clearBtn = document.createElement("button");
-    clearBtn.id = "clear-selected-btn";
-    clearBtn.textContent = "Clear All";
-    clearBtn.style.background = "#222";
-    clearBtn.style.color = "gold";
-    clearBtn.style.border = "none";
-    clearBtn.style.borderRadius = "16px";
-    clearBtn.style.padding = "4px 16px";
-    clearBtn.style.margin = "0 0 10px 0";
-    clearBtn.style.cursor = "pointer";
-    section.insertBefore(clearBtn, list);
-    clearBtn.onclick = () => {
-      selectedProductIds = [];
-      saveSelectedProductsToStorage();
-      renderSelectedProducts();
-      updateProductCardHighlights();
-    };
-  } else if (clearBtn) {
-    clearBtn.style.display = "inline-block";
-  }
-  selectedProductIds.forEach((id) => {
-    const product = allProducts.find((p) => p.id === id);
-    if (product) {
-      const li = document.createElement("li");
-      li.style.display = "flex";
-      li.style.alignItems = "center";
-      li.style.marginBottom = "6px";
-      li.innerHTML = `
-        <span style="flex:1;">${product.name}</span>
-        <button class="remove-selected-btn" data-id="${id}" style="background:#ff003b;color:#fff;border:none;border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:1em;line-height:1;">&times;</button>
-      `;
-      list.appendChild(li);
-    }
-  });
-  // Add event listeners for remove buttons
-  list.querySelectorAll(".remove-selected-btn").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      const id = btn.getAttribute("data-id");
-      toggleProductSelection(id);
-    });
-  });
-}
-
-// Helper: Toggle product selection by ID
-function toggleProductSelection(productId) {
-  const idx = selectedProductIds.indexOf(productId);
-  if (idx === -1) {
-    selectedProductIds.push(productId);
-  } else {
-    selectedProductIds.splice(idx, 1);
-  }
-  saveSelectedProductsToStorage();
-  renderSelectedProducts();
-  updateProductCardHighlights();
-}
-
-// Helper: Visually highlight selected product cards
-function updateProductCardHighlights() {
-  document.querySelectorAll(".product-card").forEach((card) => {
-    const id = card.getAttribute("data-id");
-    if (selectedProductIds.includes(id)) {
-      card.classList.add("selected");
-    } else {
-      card.classList.remove("selected");
-    }
-  });
-}
-
-// ===============================
-// Product Card Rendering (with selection)
-// ===============================
-
-// Save the original renderProductCards if it exists
-const originalRenderProductCards =
-  typeof renderProductCards === "function" ? renderProductCards : null;
-
-// Render product cards and enable selection
-function renderProductCards(products) {
-  allProducts = products;
-  const container = document.getElementById("product-cards");
-  container.innerHTML = "";
-  products.forEach((product) => {
-    const card = document.createElement("div");
-    card.className = "product-card";
-    card.setAttribute("data-id", product.id);
-    card.setAttribute("tabindex", "0");
-    card.setAttribute("role", "button");
-    card.setAttribute(
-      "aria-pressed",
-      selectedProductIds.includes(product.id) ? "true" : "false"
-    );
-    card.style.cursor = "pointer";
-    card.innerHTML = `
-      <img src="${product.image}" alt="${product.name}" style="width:60px;height:60px;object-fit:cover;border-radius:12px;box-shadow:0 2px 8px #0002;">
-      <div style="margin-top:8px;font-weight:bold;">${product.name}</div>
-      <div style="font-size:0.95em;color:#555;">${product.category}</div>
-    `;
-    // Highlight if selected
-    if (selectedProductIds.includes(product.id)) {
-      card.classList.add("selected");
-    }
-    // Click to select/unselect
-    card.addEventListener("click", () => {
-      toggleProductSelection(product.id);
-    });
-    // Keyboard accessibility (space/enter)
-    card.addEventListener("keydown", (e) => {
-      if (e.key === " " || e.key === "Enter") {
-        e.preventDefault();
-        toggleProductSelection(product.id);
-      }
-    });
-    container.appendChild(card);
-  });
-  updateProductCardHighlights();
-}
 
 // ===============================
 // On page load, ensure selected products section is rendered
@@ -327,13 +194,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const quizQuestionsDiv = document.getElementById("quiz-questions");
 
-let quizStarted = false;
-let quizTeam = "";
-let quizStartTime = 0;
-let routineStartTime = 0;
-let routineEndTime = 0;
 
-// Simple quiz questions and answers
+// --- Formula Beauty Quiz Functionality ---
+let quizStarted = false;
+let quizCurrent = 0;
+let quizAnswers = [];
+let quizTeam = "";
 const quizQuestions = [
   {
     q: "What’s your main skin goal?",
@@ -348,119 +214,71 @@ const quizQuestions = [
     a: ["Keep it cool", "Shine on", "Never give up", "Protect the finish"],
   },
 ];
-let quizAnswers = [];
+
+function showQuizQuestion(idx) {
+  quizResultDiv.style.display = "none";
+  quizRetakeBtn.style.display = "none";
+  if (idx === 0) quizAnswers = [];
+  quizCurrent = idx;
+  if (idx >= quizQuestions.length) {
+    // Quiz complete, show result
+    showQuizResult();
+    return;
+  }
+  const q = quizQuestions[idx];
+  quizQuestionsDiv.innerHTML = `<div style='font-weight:bold;font-size:1.1em;margin-bottom:10px;'>${q.q}</div>` +
+    q.a.map((ans, i) =>
+      `<button class='start-btn quiz-answer-btn' data-idx='${i}' style='margin:8px 4px 0 4px;'>${ans}</button>`
+    ).join("");
+  quizStartBtn.style.display = "none";
+  // Add event listeners for answer buttons
+  document.querySelectorAll('.quiz-answer-btn').forEach(btn => {
+    btn.onclick = () => {
+      quizAnswers[idx] = parseInt(btn.getAttribute('data-idx'));
+      showQuizQuestion(idx + 1);
+    };
+  });
+}
+
+function showQuizResult() {
+  // Simple mapping for demo
+  const teams = ["Hydration", "Glow", "Recovery", "Sun Defense"];
+  quizTeam = teams[quizAnswers[0]] || "Hydration";
+  let summary = `<div style='color:gold;font-weight:bold;font-size:1.15em;margin-bottom:10px;'>🏁 You’re on Team ${quizTeam}!</div>`;
+  summary += `<div style='color:#fff;font-size:1em;margin-bottom:10px;'>Your answers:</div><ul style='color:#ffd6e0;text-align:left;max-width:320px;margin:0 auto 12px auto;'>`;
+  quizQuestions.forEach((q, i) => {
+    if (typeof quizAnswers[i] !== 'undefined') {
+      summary += `<li><b>${q.q}</b><br><span style='color:gold;'>${q.a[quizAnswers[i]]}</span></li>`;
+    }
+  });
+  summary += `</ul>`;
+  quizResultDiv.innerHTML = summary;
+  quizResultDiv.style.display = "block";
+  quizRetakeBtn.style.display = "inline-block";
+  // Optionally, you could trigger a routine suggestion here
+}
 
 // Show quiz modal on page load
 window.addEventListener("DOMContentLoaded", () => {
   quizModal.style.display = "flex";
-  showQuizQuestion(0);
+  quizStartBtn.style.display = "inline-block";
+  quizQuestionsDiv.innerHTML = "<div style='color:#fffbe7;font-size:1.1em;'>Ready to find your Formula Beauty team? Click Start!</div>";
+  quizResultDiv.style.display = "none";
+  quizRetakeBtn.style.display = "none";
 });
-
-function showQuizQuestion(idx) {
-  if (idx >= quizQuestions.length) {
-    // Quiz complete, pick a team
-    quizTeam = pickQuizTeam();
-    quizQuestionsDiv.innerHTML = `<div style='color:#ff003b;font-weight:bold;'>You’re on Team ${quizTeam}!</div>`;
-    // Add Generate Routine button
-    quizQuestionsDiv.innerHTML += `<button id='generate-routine-btn' class='start-btn' style='margin-top:18px;'>Generate Routine</button>`;
-    quizStartBtn.style.display = "none";
-    // Add event listener after rendering
-    setTimeout(() => {
-      const genBtn = document.getElementById("generate-routine-btn");
-      if (genBtn) {
-        genBtn.onclick = async () => {
-          // Collect selected products (for demo, use pitCrewProducts or all main routine steps)
-          // In a real app, you would let users select products. Here, we use the main routine demo products.
-          const products = allProducts.length
-            ? allProducts
-            : await loadProducts();
-          const mainCategories = [
-            "cleanser",
-            "skincare",
-            "moisturizer",
-            "suncare",
-          ];
-          const selectedProducts = mainCategories
-            .map((cat) => products.find((p) => p.category === cat))
-            .filter(Boolean)
-            .map((p) => ({
-              name: p.name,
-              brand: p.brand,
-              category: p.category,
-              description: p.description,
-            }));
-          // Send to OpenAI/Worker endpoint for routine generation
-          if (selectedProducts.length && chatWindow) {
-            chatWindow.innerHTML += `<div class="user-msg">Generate a personalized routine for me using these products:</div>`;
-            chatWindow.innerHTML += `<div class="user-msg" style="font-size:0.95em;background:#fffbe7;color:#222;">${selectedProducts
-              .map((p) => `<b>${p.name}</b> (${p.brand})`)
-              .join(", ")}</div>`;
-            // Call Worker endpoint
-            try {
-              const response = await fetch(WORKER_ENDPOINT, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${
-                    typeof API_KEY !== "undefined"
-                      ? API_KEY
-                      : "pmpt_6871588c60848197b75a0d59ce945e2805634bcdbbfa9b7b"
-                  }`,
-                },
-                body: JSON.stringify({
-                  products: selectedProducts,
-                  message:
-                    "Generate a personalized skincare routine using only these products.",
-                }),
-              });
-              const data = await response.json();
-              if (data && data.reply) {
-                chatWindow.innerHTML += `<div class="bot-msg">${data.reply}</div>`;
-              } else {
-                chatWindow.innerHTML += `<div class="bot-msg error">Sorry, the pit crew couldn't generate your routine.</div>`;
-              }
-            } catch (err) {
-              chatWindow.innerHTML += `<div class="bot-msg error">Sorry, the radio comms are down in the pit lane!</div>`;
-            }
-          }
-        };
-      }
-    }, 100);
-    return;
-  }
-  const q = quizQuestions[idx];
-  quizQuestionsDiv.innerHTML =
-    `<div>${q.q}</div>` +
-    q.a
-      .map(
-        (ans, i) =>
-          `<button class='start-btn' style='margin:8px 4px 0 4px;' onclick='window.selectQuizAnswer(${idx},${i})'>${ans}</button>`
-      )
-      .join("");
-  quizStartBtn.style.display = "none";
-}
-
-// Expose for inline onclick
-window.selectQuizAnswer = function (idx, ansIdx) {
-  quizAnswers[idx] = ansIdx;
-  showQuizQuestion(idx + 1);
-};
-
-function pickQuizTeam() {
-  // Simple mapping for demo
-  const teams = ["Hydration", "Glow", "Recovery", "Sun Defense"];
-  // Use first answer or random
-  return teams[quizAnswers[0]] || "Hydration";
-}
-
-if (quizCloseBtn) {
-  quizCloseBtn.onclick = () => {
-    quizModal.style.display = "none";
-  };
-}
 
 if (quizStartBtn) {
   quizStartBtn.onclick = () => {
+    showQuizQuestion(0);
+  };
+}
+if (quizRetakeBtn) {
+  quizRetakeBtn.onclick = () => {
+    showQuizQuestion(0);
+  };
+}
+if (quizCloseBtn) {
+  quizCloseBtn.onclick = () => {
     quizModal.style.display = "none";
   };
 }
