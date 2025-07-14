@@ -165,17 +165,27 @@ const quizResultDiv = document.getElementById("quiz-result");
 // Array to keep track of selected product IDs
 let selectedProductIds = [];
 
-// Load selected products from localStorage if available
-function loadSelectedProductsFromStorage() {
-  const saved = localStorage.getItem("selectedProductIds");
-  if (saved) {
-    try {
-      const arr = JSON.parse(saved);
-      if (Array.isArray(arr)) {
-        selectedProductIds = arr;
-      }
-    } catch (e) {}
+// Render the selected products in the UI
+function renderSelectedProducts() {
+  const list = document.getElementById("selected-products-list");
+  if (!list) return;
+  list.innerHTML = "";
+  if (selectedProductIds.length === 0) {
+    list.innerHTML = "<li style='color:#aaa;'>No products selected yet.</li>";
+    return;
   }
+  // allProducts must be loaded before this runs
+  selectedProductIds.forEach((id) => {
+    const product =
+      typeof allProducts !== "undefined" && allProducts.find
+        ? allProducts.find((p) => p.id === id)
+        : null;
+    if (product) {
+      const li = document.createElement("li");
+      li.textContent = `${product.name} (${product.brand})`;
+      list.appendChild(li);
+    }
+  });
 }
 
 // Save selected products to localStorage
@@ -186,7 +196,6 @@ function saveSelectedProductsToStorage() {
   );
 }
 
-
 // ===============================
 // On page load, ensure selected products section is rendered
 // ===============================
@@ -196,7 +205,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 const quizQuestionsDiv = document.getElementById("quiz-questions");
-
 
 // --- Formula Beauty Quiz Functionality ---
 let quizStarted = false;
@@ -229,15 +237,19 @@ function showQuizQuestion(idx) {
     return;
   }
   const q = quizQuestions[idx];
-  quizQuestionsDiv.innerHTML = `<div style='font-weight:bold;font-size:1.1em;margin-bottom:10px;'>${q.q}</div>` +
-    q.a.map((ans, i) =>
-      `<button class='start-btn quiz-answer-btn' data-idx='${i}' style='margin:8px 4px 0 4px;'>${ans}</button>`
-    ).join("");
+  quizQuestionsDiv.innerHTML =
+    `<div style='font-weight:bold;font-size:1.1em;margin-bottom:10px;'>${q.q}</div>` +
+    q.a
+      .map(
+        (ans, i) =>
+          `<button class='start-btn quiz-answer-btn' data-idx='${i}' style='margin:8px 4px 0 4px;'>${ans}</button>`
+      )
+      .join("");
   quizStartBtn.style.display = "none";
   // Add event listeners for answer buttons
-  document.querySelectorAll('.quiz-answer-btn').forEach(btn => {
+  document.querySelectorAll(".quiz-answer-btn").forEach((btn) => {
     btn.onclick = () => {
-      quizAnswers[idx] = parseInt(btn.getAttribute('data-idx'));
+      quizAnswers[idx] = parseInt(btn.getAttribute("data-idx"));
       showQuizQuestion(idx + 1);
     };
   });
@@ -250,8 +262,10 @@ function showQuizResult() {
   let summary = `<div style='color:gold;font-weight:bold;font-size:1.15em;margin-bottom:10px;'>🏁 You’re on Team ${quizTeam}!</div>`;
   summary += `<div style='color:#fff;font-size:1em;margin-bottom:10px;'>Your answers:</div><ul style='color:#ffd6e0;text-align:left;max-width:320px;margin:0 auto 12px auto;'>`;
   quizQuestions.forEach((q, i) => {
-    if (typeof quizAnswers[i] !== 'undefined') {
-      summary += `<li><b>${q.q}</b><br><span style='color:gold;'>${q.a[quizAnswers[i]]}</span></li>`;
+    if (typeof quizAnswers[i] !== "undefined") {
+      summary += `<li><b>${q.q}</b><br><span style='color:gold;'>${
+        q.a[quizAnswers[i]]
+      }</span></li>`;
     }
   });
   summary += `</ul>`;
@@ -265,7 +279,8 @@ function showQuizResult() {
 window.addEventListener("DOMContentLoaded", () => {
   quizModal.style.display = "flex";
   quizStartBtn.style.display = "inline-block";
-  quizQuestionsDiv.innerHTML = "<div style='color:#fffbe7;font-size:1.1em;'>Ready to find your Formula Beauty team? Click Start!</div>";
+  quizQuestionsDiv.innerHTML =
+    "<div style='color:#fffbe7;font-size:1.1em;'>Ready to find your Formula Beauty team? Click Start!</div>";
   quizResultDiv.style.display = "none";
   quizRetakeBtn.style.display = "none";
 });
