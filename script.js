@@ -550,3 +550,73 @@ async function init() {
 
 // Run the UI setup
 init();
+
+// --- Sample products data (for local testing, remove in production) ---
+const sampleProducts = {
+  products: [
+    {
+      id: 1,
+      name: "Hydrating Cleanser",
+      brand: "L'Oréal",
+      category: "cleanser",
+      description: "Gently cleanses and hydrates.",
+      image: "img/cleanser.png",
+    },
+    {
+      id: 2,
+      name: "Revitalizing Serum",
+      brand: "Neutrogena",
+      category: "serum",
+      description: "Boosts radiance and fights fatigue.",
+      image: "img/serum.png",
+    },
+    {
+      id: 3,
+      name: "Moisture Lock Cream",
+      brand: "CeraVe",
+      category: "moisturizer",
+      description: "Provides long-lasting hydration.",
+      image: "img/moisturizer.png",
+    },
+    {
+      id: 4,
+      name: "Ultra Sheer SPF 50",
+      brand: "Banana Boat",
+      category: "suncare",
+      description: "Broad-spectrum sun protection.",
+      image: "img/spf.png",
+    },
+    {
+      id: 5,
+      name: "Nourishing Hair Oil",
+      brand: "Dove",
+      category: "haircare",
+      description: "Deeply nourishes and adds shine.",
+      image: "img/haircare.png",
+    },
+    {
+      id: 6,
+      name: "Long-lasting Foundation",
+      brand: "Maybelline",
+      category: "makeup",
+      description: "Flawless coverage that lasts all day.",
+      image: "img/foundation.png",
+    },
+    {
+      id: 7,
+      name: "Eau de Parfum",
+      brand: "Chanel",
+      category: "fragrance",
+      description: "Timeless and elegant scent.",
+      image: "img/fragrance.png",
+    },
+    {
+      id: 8,
+      name: "Beard Oil",
+      brand: "The Art of Shaving",
+      category: "men's grooming",
+      description: "Softens and conditions facial hair.",
+      image: "img/beard_oil.png",
+    },
+  ],
+};
