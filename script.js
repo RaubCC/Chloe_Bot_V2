@@ -206,14 +206,24 @@ function saveSelectedProductsToStorage() {
 // ===============================
 // On page load, ensure selected products section is rendered
 // ===============================
-document.addEventListener("DOMContentLoaded", () => {
-  loadSelectedProductsFromStorage();
-  renderSelectedProducts();
-});
-
 const quizQuestionsDiv = document.getElementById("quiz-questions");
 
 // --- Formula Beauty Quiz Functionality ---
+
+// Combine all DOMContentLoaded logic into one event listener
+document.addEventListener("DOMContentLoaded", () => {
+  // Product selection UI setup
+  loadSelectedProductsFromStorage();
+  renderSelectedProducts();
+
+  // Quiz modal setup
+  quizModal.style.display = "flex";
+  quizStartBtn.style.display = "inline-block";
+  quizQuestionsDiv.innerHTML =
+    "<div style='color:#fffbe7;font-size:1.1em;'>Ready to find your Formula Beauty team? Click Start!</div>";
+  quizResultDiv.style.display = "none";
+  quizRetakeBtn.style.display = "none";
+});
 let quizStarted = false;
 let quizCurrent = 0;
 let quizAnswers = [];
