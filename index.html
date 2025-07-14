@@ -42,6 +42,34 @@
         <h1>Chloe's Racing Routine Builder</h1>
     </header>
     <main>
+        <!-- Formula Beauty Quiz Modal -->
+        <div id="quiz-modal" class="modal" style="display:none;">
+          <div class="modal-content">
+            <h2>Formula Beauty Quiz</h2>
+            <div id="quiz-questions">
+              <!-- Quiz questions will be added by JS -->
+            </div>
+            <button id="quiz-start-btn" class="start-btn">Start Quiz</button>
+            <button id="quiz-close-btn" class="start-btn" style="background:#222;color:gold;">Close</button>
+          </div>
+        </div>
+        <!-- Trophy Modal for Post-Routine Celebration -->
+        <div id="trophy-modal" class="modal" style="display:none;">
+          <div class="modal-content">
+            <h2>🏆 Routine Complete!</h2>
+            <div id="trophy-podium">
+              <!-- Trophy or podium graphic will be added by JS -->
+            </div>
+            <div id="best-lap-time">Best Lap Time: <span id="lap-time-value">--:--</span></div>
+            <button id="trophy-close-btn" class="start-btn">Close</button>
+          </div>
+        </div>
+        <!-- Carlos Sainz Quote/Easter Egg -->
+        <div id="carlos-quote" style="text-align:center;margin:24px 0 0 0;">
+          <img src="https://cdn.jsdelivr.net/gh/GCA-Classroom/09-loreal-images/img/carlos-sainz-campaign.jpg" alt="Carlos Sainz" style="width:90px;border-radius:50%;box-shadow:0 2px 8px #0003;display:block;margin:0 auto 8px auto;">
+          <div style="color:gold;font-weight:bold;font-size:1.1em;">“Remember, hydration is key to staying in the race!”</div>
+          <div style="color:#ff003b;font-size:0.95em;">— Carlos Sainz, Beauty Pit Crew Chief</div>
+        </div>
 
         <!-- Start Your Engines Button -->
         <section id="start-section">

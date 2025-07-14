@@ -1,3 +1,87 @@
+// --- Trophy & Quiz Modal Logic ---
+const trophyModal = document.getElementById("trophy-modal");
+const trophyCloseBtn = document.getElementById("trophy-close-btn");
+const lapTimeValue = document.getElementById("lap-time-value");
+const trophyPodium = document.getElementById("trophy-podium");
+
+const quizModal = document.getElementById("quiz-modal");
+const quizStartBtn = document.getElementById("quiz-start-btn");
+const quizCloseBtn = document.getElementById("quiz-close-btn");
+const quizQuestionsDiv = document.getElementById("quiz-questions");
+
+let quizStarted = false;
+let quizTeam = "";
+let quizStartTime = 0;
+let routineStartTime = 0;
+let routineEndTime = 0;
+
+// Simple quiz questions and answers
+const quizQuestions = [
+  {
+    q: "What’s your main skin goal?",
+    a: ["Hydration", "Glow", "Recovery", "Sun Defense"],
+  },
+  {
+    q: "Pick your race weekend weather:",
+    a: ["Sunny", "Rainy", "Night", "Cloudy"],
+  },
+  {
+    q: "Your F1 pit crew motto?",
+    a: ["Keep it cool", "Shine on", "Never give up", "Protect the finish"],
+  },
+];
+let quizAnswers = [];
+
+// Show quiz modal on page load
+window.addEventListener("DOMContentLoaded", () => {
+  quizModal.style.display = "flex";
+  showQuizQuestion(0);
+});
+
+function showQuizQuestion(idx) {
+  if (idx >= quizQuestions.length) {
+    // Quiz complete, pick a team
+    quizTeam = pickQuizTeam();
+    quizQuestionsDiv.innerHTML = `<div style='color:#ff003b;font-weight:bold;'>You’re on Team ${quizTeam}!</div>`;
+    quizStartBtn.style.display = "none";
+    return;
+  }
+  const q = quizQuestions[idx];
+  quizQuestionsDiv.innerHTML =
+    `<div>${q.q}</div>` +
+    q.a
+      .map(
+        (ans, i) =>
+          `<button class='start-btn' style='margin:8px 4px 0 4px;' onclick='window.selectQuizAnswer(${idx},${i})'>${ans}</button>`
+      )
+      .join("");
+  quizStartBtn.style.display = "none";
+}
+
+// Expose for inline onclick
+window.selectQuizAnswer = function (idx, ansIdx) {
+  quizAnswers[idx] = ansIdx;
+  showQuizQuestion(idx + 1);
+};
+
+function pickQuizTeam() {
+  // Simple mapping for demo
+  const teams = ["Hydration", "Glow", "Recovery", "Sun Defense"];
+  // Use first answer or random
+  return teams[quizAnswers[0]] || "Hydration";
+}
+
+if (quizCloseBtn) {
+  quizCloseBtn.onclick = () => {
+    quizModal.style.display = "none";
+  };
+}
+
+if (quizStartBtn) {
+  quizStartBtn.onclick = () => {
+    quizModal.style.display = "none";
+  };
+}
 // --- Racing Routine UI Script ---
 
 // 1. Get references to main UI sections
@@ -57,6 +141,8 @@ if (startBtn) {
     renderRaceTrack();
     showFlag();
     updateSpeedometer();
+    // Start timer for lap time
+    routineStartTime = Date.now();
     demoProgress();
   });
 }
@@ -189,8 +275,26 @@ function demoProgress() {
       hasProductConflict = false;
       showFlag();
       updateSpeedometer();
+      // Show trophy modal and lap time
+      routineEndTime = Date.now();
+      showTrophyModal();
     }
   }, 2000);
+}
+
+function showTrophyModal() {
+  if (!trophyModal) return;
+  // Calculate lap time in seconds
+  let lapTime = ((routineEndTime - routineStartTime) / 1000).toFixed(1);
+  lapTimeValue.textContent = `${lapTime}s`;
+  trophyPodium.innerHTML = `🏆<br><span style='font-size:0.6em;color:#ff003b;'>Pole Position!</span>`;
+  trophyModal.style.display = "flex";
+}
+
+if (trophyCloseBtn) {
+  trophyCloseBtn.onclick = () => {
+    trophyModal.style.display = "none";
+  };
 }
 
 // Show overtake animation (mini pop-up)

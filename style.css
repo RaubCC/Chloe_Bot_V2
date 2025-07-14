@@ -1,3 +1,62 @@
+/* Modal Styles (Quiz & Trophy) */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.65);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: modal-fadein 0.4s;
+}
+@keyframes modal-fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.modal-content {
+  background: #fffbe7;
+  border-radius: 18px;
+  padding: 32px 28px 24px 28px;
+  box-shadow: 0 4px 32px #0005;
+  min-width: 320px;
+  max-width: 95vw;
+  text-align: center;
+  position: relative;
+}
+#trophy-podium {
+  margin: 18px 0 12px 0;
+  font-size: 3em;
+  color: gold;
+  text-shadow: 2px 2px 8px #ff003b55;
+}
+#best-lap-time {
+  color: #ff003b;
+  font-size: 1.2em;
+  margin-bottom: 18px;
+  font-weight: bold;
+}
+#quiz-questions {
+  margin: 18px 0 18px 0;
+  color: #222;
+  font-size: 1.1em;
+}
+#quiz-modal h2,
+#trophy-modal h2 {
+  color: #ff003b;
+  margin-bottom: 12px;
+}
+#quiz-start-btn,
+#quiz-close-btn,
+#trophy-close-btn {
+  margin: 8px 8px 0 8px;
+}
 /* Start Your Engines Button */
 #start-section {
   display: flex;
