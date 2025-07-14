@@ -10,6 +10,10 @@ const chatWindow = document.getElementById("chatWindow");
 // Store all products globally so all functions can access
 let allProducts = [];
 
+// Track routine timer globally
+let routineStartTime = 0,
+  routineEndTime = 0;
+
 // Store chat history for context-aware responses
 let chatHistory = [];
 
