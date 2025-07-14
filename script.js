@@ -7,6 +7,9 @@ const userInput = document.getElementById("userInput");
 const sendBtn = document.getElementById("sendBtn");
 const chatWindow = document.getElementById("chatWindow");
 
+// Store all products globally so all functions can access
+let allProducts = [];
+
 // Store chat history for context-aware responses
 let chatHistory = [];
 
