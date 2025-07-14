@@ -88,6 +88,7 @@
             <div id="overtake-animation"></div>
         </section>
 
+
         <!-- Speedometer Progress Bar -->
         <section id="speedometer-section">
             <div id="speedometer">
@@ -98,9 +99,20 @@
             </div>
         </section>
 
+        <!-- Team Radio: Share Routine Button -->
+        <div id="team-radio-share" style="text-align:center;margin:18px 0 0 0;">
+          <button id="share-routine-btn" class="start-btn" style="background:#222;color:gold;">Share with the Team</button>
+          <div id="share-message" style="margin-top:8px;color:gold;font-weight:bold;display:none;">Race report copied to clipboard!</div>
+        </div>
+
         <!-- Pit Crew Product Cards -->
         <section id="products-section">
             <h2>Pit Crew Products</h2>
+            <!-- Radio Console Search Bar -->
+            <div id="radio-search-bar" style="display:flex;justify-content:center;align-items:center;margin-bottom:18px;">
+              <input id="product-search" type="text" placeholder="Radio Comms: Search for a product…" style="width:260px;padding:10px 16px;border-radius:18px 0 0 18px;border:2px solid #ff003b;font-size:1em;outline:none;">
+              <button id="search-btn" style="background:#ff003b;color:#fff;padding:10px 18px;border:none;border-radius:0 18px 18px 0;font-size:1.1em;font-weight:bold;cursor:pointer;">🔊</button>
+            </div>
             <div id="product-cards">
                 <!-- Product cards will be added by JS -->
             </div>

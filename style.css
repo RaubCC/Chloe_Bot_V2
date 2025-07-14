@@ -1,3 +1,72 @@
+/* Radio Console Search Bar */
+#radio-search-bar {
+  background: #222;
+  border-radius: 22px;
+  box-shadow: 0 2px 12px #ff003b33;
+  padding: 8px 10px 8px 10px;
+  margin-bottom: 18px;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+  border: 2px solid gold;
+}
+#product-search {
+  border: none;
+  background: #111;
+  color: #fff;
+  border-radius: 18px 0 0 18px;
+  font-family: "Montserrat", Arial, sans-serif;
+  font-size: 1em;
+  outline: none;
+  box-shadow: none;
+}
+#product-search::placeholder {
+  color: #ffd6e0;
+  opacity: 1;
+}
+#search-btn {
+  background: #ff003b;
+  color: #fff;
+  border: none;
+  border-radius: 0 18px 18px 0;
+  font-size: 1.1em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+#search-btn:hover,
+#search-btn:focus {
+  background: gold;
+  color: #222;
+}
+
+/* Team Radio Share Button */
+#team-radio-share {
+  margin-top: 18px;
+}
+#share-routine-btn {
+  background: #222;
+  color: gold;
+  border: 2px solid gold;
+  border-radius: 22px;
+  font-size: 1.1em;
+  font-weight: bold;
+  padding: 12px 32px;
+  margin-bottom: 6px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+#share-routine-btn:hover,
+#share-routine-btn:focus {
+  background: gold;
+  color: #ff003b;
+}
+#share-message {
+  color: gold;
+  font-weight: bold;
+  margin-top: 8px;
+  display: none;
+}
 /* Modal Styles (Quiz & Trophy) */
 .modal {
   position: fixed;

@@ -1,3 +1,52 @@
+// --- Radio Console Search & Team Radio Share ---
+const productSearch = document.getElementById("product-search");
+const searchBtn = document.getElementById("search-btn");
+const shareBtn = document.getElementById("share-routine-btn");
+const shareMsg = document.getElementById("share-message");
+
+let allProducts = [];
+
+// Filter product cards by search
+function filterProducts(query) {
+  const filtered = allProducts.filter(
+    (p) =>
+      p.name.toLowerCase().includes(query.toLowerCase()) ||
+      p.brand.toLowerCase().includes(query.toLowerCase())
+  );
+  renderProductCards(filtered);
+}
+
+if (productSearch && searchBtn) {
+  searchBtn.onclick = () => {
+    filterProducts(productSearch.value);
+  };
+  productSearch.onkeyup = (e) => {
+    if (e.key === "Enter") filterProducts(productSearch.value);
+    if (productSearch.value === "") renderProductCards(allProducts);
+  };
+}
+
+// Share routine as a race report
+if (shareBtn && shareMsg) {
+  shareBtn.onclick = () => {
+    // For demo, just share the routine steps and lap time
+    let report = "🏁 Team Radio: Race Report!\n";
+    report += routineSteps.map((s, i) => `Lap ${i + 1}: ${s.step}`).join("\n");
+    if (
+      lapTimeValue &&
+      lapTimeValue.textContent &&
+      lapTimeValue.textContent !== "--:--"
+    ) {
+      report += `\nBest Lap Time: ${lapTimeValue.textContent}`;
+    }
+    navigator.clipboard.writeText(report).then(() => {
+      shareMsg.style.display = "block";
+      setTimeout(() => {
+        shareMsg.style.display = "none";
+      }, 1800);
+    });
+  };
+}
 // --- Trophy & Quiz Modal Logic ---
 const trophyModal = document.getElementById("trophy-modal");
 const trophyCloseBtn = document.getElementById("trophy-close-btn");
@@ -230,6 +279,7 @@ async function loadProducts() {
   // Fetch product data from JSON file
   const response = await fetch("products.json");
   const data = await response.json();
+  allProducts = data.products;
   return data.products;
 }
 
