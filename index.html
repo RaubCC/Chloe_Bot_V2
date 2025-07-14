@@ -36,27 +36,45 @@
           <option value="men's grooming">Men's Grooming</option>
           <option value="suncare">Suncare</option>
           <option value="fragrance">Fragrance</option>
-        </select>
-      </div>
+<body>
+    <header>
+        <img src="img/loreal-logo.png" alt="L'Oréal Logo" id="logo">
+        <h1>Chloe's Racing Routine Builder</h1>
+    </header>
+    <main>
+        <!-- Stylized Race Track with Checkpoints -->
+        <section id="routine-track-section">
+            <div id="race-track">
+                <!-- Checkpoints will be added by JS -->
+            </div>
+            <div id="flag-animation">
+                <!-- Flag icon will be shown here -->
+            </div>
+        </section>
 
-      <!-- Products Grid -->
-      <div id="productsContainer" class="products-grid"></div>
+        <!-- Speedometer Progress Bar -->
+        <section id="speedometer-section">
+            <div id="speedometer">
+                <div id="speedometer-bg">
+                    <div id="speedometer-needle"></div>
+                    <span id="speedometer-label">Routine 0% built!</span>
+                </div>
+            </div>
+        </section>
 
-      <!-- Selected Products -->
-      <div class="selected-products">
-        <h2>Selected Products</h2>
-        <div id="selectedProductsList"></div>
-        <button id="generateRoutine" class="generate-btn">
-          <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Routine
-        </button>
-      </div>
-
-      <!------- Chat Area ------->
-      <section class="chatbox">
-        <h2>Let's Build Your Routine</h2>
-        <div id="chatWindow" class="chat-window"></div>
-
-        <form id="chatForm" class="chat-form">
+        <!-- Pit Crew Product Cards -->
+        <section id="products-section">
+            <h2>Pit Crew Products</h2>
+            <div id="product-cards">
+                <!-- Product cards will be added by JS -->
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2025 L'Oréal. All rights reserved.</p>
+    </footer>
+    <script src="script.js"></script>
+</body>
           <label for="userInput" class="visually-hidden">Message</label>
           <input
             id="userInput"
