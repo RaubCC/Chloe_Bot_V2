@@ -182,6 +182,9 @@ function loadSelectedProductsFromStorage() {
 function saveSelectedProductsToStorage() {
   localStorage.setItem(
     "selectedProductIds",
+    JSON.stringify(selectedProductIds)
+  );
+}
 
 
 // ===============================
