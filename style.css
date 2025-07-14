@@ -1,4 +1,43 @@
-/* Floating Chat Window Styles */
+/* --- F1 Sleek & Aerodynamic Theme --- */
+html, body {
+  font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+  background: linear-gradient(120deg, #0a0a0f 0%, #1a1a2a 60%, #ff003b 100%);
+  color: #f5f5f5;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  letter-spacing: 0.01em;
+}
+
+header, .site-header {
+  background: linear-gradient(90deg, #0a0a0f 0%, #ff003b 100%);
+  color: #fff;
+  padding: 28px 0 18px 0;
+  text-align: center;
+  border-bottom: 5px solid gold;
+  box-shadow: 0 4px 24px #ff003b33;
+}
+
+.logo {
+  width: 120px;
+  margin-bottom: 10px;
+  filter: drop-shadow(0 2px 8px #ff003b88);
+}
+
+.site-title {
+  font-size: 2.1em;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-shadow: 0 2px 12px #ff003b55;
+}
+
+main {
+  padding: 24px 0 80px 0;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Floating Chat Window Styles - F1 Glassy Look */
 #floating-chat-container {
   position: fixed;
   bottom: 24px;
@@ -7,25 +46,30 @@
   width: 92vw;
   z-index: 9999;
   font-family: inherit;
+  border-radius: 22px;
+  box-shadow: 0 8px 32px #ff003b55, 0 1.5px 8px #0008;
+  background: linear-gradient(120deg, #181824cc 60%, #ff003b33 100%);
+  backdrop-filter: blur(8px);
+  border: 2.5px solid gold;
 }
 
 #floating-chat-container #chatWindow {
-  background: #fff;
+  background: transparent;
   border-radius: 16px 16px 0 0;
-  box-shadow: 0 4px 24px #0002;
   min-height: 120px;
   max-height: 320px;
   overflow-y: auto;
   padding: 16px 12px 8px 12px;
   font-size: 1em;
+  color: #fff;
+  font-family: inherit;
 }
 
 #floating-chat-container form {
   display: flex;
   align-items: center;
-  background: #fff;
+  background: transparent;
   border-radius: 0 0 16px 16px;
-  box-shadow: 0 2px 8px #0001;
   padding: 8px 8px 8px 12px;
   gap: 6px;
 }
@@ -33,14 +77,22 @@
 #floating-chat-container input[type="text"] {
   flex: 1;
   padding: 8px 12px;
-  border-radius: 12px;
-  border: 1.5px solid #eee;
+  border-radius: 18px;
+  border: 2px solid #ff003b;
   font-size: 1em;
   outline: none;
+  background: #181824cc;
+  color: #fff;
+  box-shadow: 0 1px 4px #ff003b22;
+  transition: border 0.2s, background 0.2s;
+}
+#floating-chat-container input[type="text"]:focus {
+  border-color: gold;
+  background: #222;
 }
 
 #floating-chat-container button#sendBtn {
-  background: #ff003b;
+  background: linear-gradient(135deg, #ff003b 60%, gold 100%);
   color: #fff;
   border: none;
   border-radius: 50%;
@@ -51,6 +103,13 @@
   justify-content: center;
   font-size: 1.2em;
   cursor: pointer;
+  box-shadow: 0 2px 8px #ff003b44;
+  transition: background 0.2s, color 0.2s;
+}
+#floating-chat-container button#sendBtn:hover,
+#floating-chat-container button#sendBtn:focus {
+  background: linear-gradient(135deg, gold 60%, #ff003b 100%);
+  color: #222;
 }
 
 @media (max-width: 600px) {
@@ -78,54 +137,66 @@
   direction: rtl;
   text-align: right;
 }
-/* Responsive Product Grid */
+/* Responsive Product Grid - F1 Style */
 #product-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 24px;
   margin-bottom: 18px;
+  background: none;
 }
 
 .product-card {
   position: relative;
-  background: #fff;
-  border-radius: 14px;
-  box-shadow: 0 2px 8px #0001;
-  padding: 16px 10px 12px 10px;
+  background: linear-gradient(120deg, #181824 60%, #ff003b 100%);
+  border-radius: 22px 22px 38px 38px/18px 18px 32px 32px;
+  box-shadow: 0 4px 24px #ff003b33, 0 1.5px 8px #0008;
+  padding: 22px 14px 18px 14px;
   min-width: 0;
   min-height: 180px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  transition: box-shadow 0.2s, border 0.2s;
+  border: 2.5px solid gold;
+  transition: box-shadow 0.2s, border 0.2s, transform 0.2s;
+  overflow: hidden;
 }
-
-/* Checkmark overlay for selected cards */
+.product-card:hover, .product-card:focus {
+  box-shadow: 0 8px 32px #ff003b55, 0 2px 12px #0008;
+  border-color: #ff003b;
+  transform: scale(1.04) skewX(-2deg);
+}
+.product-card.selected {
+  border: 3px solid #ff003b;
+  box-shadow: 0 0 18px #ff003b88;
+  background: linear-gradient(120deg, #222 60%, #ff003b 100%);
+}
 .product-card.selected::after {
   content: "\2714";
   position: absolute;
-  top: 8px;
-  right: 12px;
-  background: #ff003b;
-  color: #fff;
+  top: 10px;
+  right: 18px;
+  background: gold;
+  color: #ff003b;
   border-radius: 50%;
-  width: 22px;
-  height: 22px;
+  width: 26px;
+  height: 26px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.1em;
+  font-size: 1.2em;
   font-weight: bold;
-  box-shadow: 0 1px 4px #0002;
+  box-shadow: 0 1px 6px #ff003b44;
   z-index: 2;
 }
 
 @media (max-width: 900px) {
   #product-cards {
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 14px;
   }
   .product-card {
-    min-height: 150px;
+    min-height: 140px;
     padding: 12px 6px 10px 6px;
   }
 }
@@ -135,12 +206,12 @@
     padding: 0 2vw;
   }
   #product-cards {
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 8px;
   }
   .product-card {
-    min-height: 120px;
-    padding: 8px 2px 8px 2px;
+    min-height: 100px;
+    padding: 6px 2px 6px 2px;
   }
   #selected-products-section {
     font-size: 0.98em;
@@ -218,16 +289,10 @@
 [dir="rtl"] #share-message {
   text-align: right;
 }
-/* Highlight selected product card */
-.product-card.selected {
-  border: 3px solid #ff003b;
-  box-shadow: 0 0 12px #ff003b55;
-  background: #fff7f9;
-  transition: border 0.2s, box-shadow 0.2s, background 0.2s;
-}
-/* Radio Console Search Bar */
+/* Remove legacy highlight, handled above */
+/* Radio Console Search Bar - F1 Style */
 #radio-search-bar {
-  background: #222;
+  background: linear-gradient(90deg, #181824 60%, #ff003b 100%);
   border-radius: 22px;
   box-shadow: 0 2px 12px #ff003b33;
   padding: 8px 10px 8px 10px;
@@ -236,43 +301,47 @@
   margin-left: auto;
   margin-right: auto;
   border: 2px solid gold;
+  display: flex;
+  align-items: center;
 }
 #product-search {
   border: none;
-  background: #111;
+  background: #181824;
   color: #fff;
   border-radius: 18px 0 0 18px;
   font-family: "Montserrat", Arial, sans-serif;
   font-size: 1em;
   outline: none;
   box-shadow: none;
+  padding: 10px 16px;
 }
 #product-search::placeholder {
   color: #ffd6e0;
   opacity: 1;
 }
 #search-btn {
-  background: #ff003b;
+  background: linear-gradient(135deg, #ff003b 60%, gold 100%);
   color: #fff;
   border: none;
   border-radius: 0 18px 18px 0;
   font-size: 1.1em;
   font-weight: bold;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s, color 0.2s;
+  padding: 10px 18px;
 }
 #search-btn:hover,
 #search-btn:focus {
-  background: gold;
+  background: linear-gradient(135deg, gold 60%, #ff003b 100%);
   color: #222;
 }
 
-/* Team Radio Share Button */
+/* Team Radio Share Button - F1 Style */
 #team-radio-share {
   margin-top: 18px;
 }
 #share-routine-btn {
-  background: #222;
+  background: linear-gradient(90deg, #181824 60%, #ff003b 100%);
   color: gold;
   border: 2px solid gold;
   border-radius: 22px;
@@ -282,11 +351,12 @@
   margin-bottom: 6px;
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
+  box-shadow: 0 2px 8px #ff003b44;
 }
 #share-routine-btn:hover,
 #share-routine-btn:focus {
-  background: gold;
-  color: #ff003b;
+  background: linear-gradient(90deg, gold 60%, #ff003b 100%);
+  color: #222;
 }
 #share-message {
   color: gold;
@@ -294,14 +364,14 @@
   margin-top: 8px;
   display: none;
 }
-/* Modal Styles (Quiz & Trophy) */
+/* Modal Styles (Quiz & Trophy) - F1 Glassy */
 .modal {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(10, 10, 20, 0.85);
   z-index: 1000;
   display: flex;
   align-items: center;
@@ -309,22 +379,21 @@
   animation: modal-fadein 0.4s;
 }
 @keyframes modal-fadein {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 .modal-content {
-  background: #fffbe7;
-  border-radius: 18px;
+  background: linear-gradient(120deg, #181824 60%, #ff003b 100%);
+  border-radius: 22px;
   padding: 32px 28px 24px 28px;
-  box-shadow: 0 4px 32px #0005;
+  box-shadow: 0 8px 32px #ff003b55, 0 1.5px 8px #0008;
   min-width: 320px;
   max-width: 95vw;
   text-align: center;
   position: relative;
+  color: #fff;
+  border: 2.5px solid gold;
+  font-family: inherit;
 }
 #trophy-podium {
   margin: 18px 0 12px 0;
@@ -353,68 +422,60 @@
 #trophy-close-btn {
   margin: 8px 8px 0 8px;
 }
-/* Start Your Engines Button */
+/* Start Your Engines Button - F1 Style */
 #start-section {
   display: flex;
   justify-content: center;
   margin: 32px 0 12px 0;
 }
 .start-btn {
-  background: linear-gradient(90deg, #ff003b 60%, gold 100%);
-  color: #fff;
+  background: linear-gradient(90deg, #181824 60%, #ff003b 100%);
+  color: gold;
   font-size: 1.3em;
   font-weight: bold;
-  border: none;
+  border: 2px solid gold;
   border-radius: 30px;
   padding: 16px 38px;
   box-shadow: 0 2px 12px #ff003b44;
   cursor: pointer;
   letter-spacing: 1px;
-  transition: background 0.2s, transform 0.2s;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
   outline: none;
 }
 .start-btn:hover,
 .start-btn:focus {
   background: linear-gradient(90deg, gold 60%, #ff003b 100%);
   color: #222;
-  transform: scale(1.06) rotate(-2deg);
+  transform: scale(1.06) skewX(-2deg);
 }
 
-/* Pit Stop Tips */
+/* Pit Stop Tips - F1 Style */
 .pit-stop-tip {
   position: absolute;
   top: 70px;
   left: 50%;
   transform: translateX(-50%);
-  background: #fffbe7;
-  color: #ff003b;
+  background: linear-gradient(90deg, #181824 60%, #ff003b 100%);
+  color: gold;
   border: 2px solid gold;
-  border-radius: 12px;
-  padding: 6px 18px;
+  border-radius: 16px;
+  padding: 8px 22px;
   font-size: 1em;
-  font-weight: 500;
-  box-shadow: 0 2px 8px #0001;
+  font-weight: 600;
+  box-shadow: 0 2px 12px #ff003b44;
   z-index: 10;
   white-space: nowrap;
-  opacity: 0.95;
+  opacity: 0.97;
   pointer-events: none;
   animation: pitstop-pop 0.7s;
 }
 @keyframes pitstop-pop {
-  0% {
-    transform: translateX(-50%) scale(0.7);
-    opacity: 0;
-  }
-  80% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(-50%) scale(1);
-    opacity: 0.95;
-  }
+  0% { transform: translateX(-50%) scale(0.7); opacity: 0; }
+  80% { opacity: 1; }
+  100% { transform: translateX(-50%) scale(1); opacity: 0.97; }
 }
 
-/* Overtake Animation */
+/* Overtake Animation - F1 Style */
 #overtake-animation {
   position: absolute;
   left: 50%;
@@ -425,32 +486,21 @@
 }
 .overtake-effect {
   display: inline-block;
-  background: gold;
-  color: #ff003b;
+  background: linear-gradient(90deg, gold 60%, #ff003b 100%);
+  color: #181824;
   font-weight: bold;
   font-size: 1.2em;
-  border-radius: 16px;
-  padding: 8px 22px;
+  border-radius: 18px;
+  padding: 10px 28px;
   box-shadow: 0 2px 12px #ff003b44;
   border: 2px solid #ff003b;
   animation: overtake-zoom 1.1s cubic-bezier(0.4, 2, 0.6, 1);
 }
 @keyframes overtake-zoom {
-  0% {
-    transform: scale(0.7) translateY(-30px);
-    opacity: 0;
-  }
-  40% {
-    opacity: 1;
-  }
-  80% {
-    transform: scale(1.1) translateY(0);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1) translateY(-30px);
-    opacity: 0;
-  }
+  0% { transform: scale(0.7) translateY(-30px); opacity: 0; }
+  40% { opacity: 1; }
+  80% { transform: scale(1.1) translateY(0); opacity: 1; }
+  100% { transform: scale(1) translateY(-30px); opacity: 0; }
 }
 /* —— basic reset —— */
 * {
