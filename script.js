@@ -62,7 +62,7 @@ const searchBtn = document.getElementById("search-btn");
 const shareBtn = document.getElementById("share-routine-btn");
 const shareMsg = document.getElementById("share-message");
 
-let allProducts = [];
+// let allProducts = []; // Already declared above, do not redeclare
 
 // Filter product cards by search
 function filterProducts(query) {
@@ -114,6 +114,115 @@ const trophyPodium = document.getElementById("trophy-podium");
 const quizModal = document.getElementById("quiz-modal");
 const quizStartBtn = document.getElementById("quiz-start-btn");
 const quizCloseBtn = document.getElementById("quiz-close-btn");
+// ===============================
+// Product Selection Logic
+// ===============================
+
+// Array to keep track of selected product IDs
+let selectedProductIds = [];
+
+// Store all products for lookup
+let allProducts = [];
+
+// Helper: Render the selected products list
+function renderSelectedProducts() {
+  const list = document.getElementById("selected-products-list");
+  list.innerHTML = "";
+  if (selectedProductIds.length === 0) {
+    list.innerHTML =
+      '<li style="color:#888;font-size:0.98em;">No products selected yet.</li>';
+    return;
+  }
+  selectedProductIds.forEach((id) => {
+    const product = allProducts.find((p) => p.id === id);
+    if (product) {
+      const li = document.createElement("li");
+      li.style.display = "flex";
+      li.style.alignItems = "center";
+      li.style.marginBottom = "6px";
+      li.innerHTML = `
+        <span style="flex:1;">${product.name}</span>
+        <button class="remove-selected-btn" data-id="${id}" style="background:#ff003b;color:#fff;border:none;border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:1em;line-height:1;">&times;</button>
+      `;
+      list.appendChild(li);
+    }
+  });
+  // Add event listeners for remove buttons
+  list.querySelectorAll(".remove-selected-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      const id = btn.getAttribute("data-id");
+      toggleProductSelection(id);
+    });
+  });
+}
+
+// Helper: Toggle product selection by ID
+function toggleProductSelection(productId) {
+  const idx = selectedProductIds.indexOf(productId);
+  if (idx === -1) {
+    selectedProductIds.push(productId);
+  } else {
+    selectedProductIds.splice(idx, 1);
+  }
+  renderSelectedProducts();
+  updateProductCardHighlights();
+}
+
+// Helper: Visually highlight selected product cards
+function updateProductCardHighlights() {
+  document.querySelectorAll(".product-card").forEach((card) => {
+    const id = card.getAttribute("data-id");
+    if (selectedProductIds.includes(id)) {
+      card.classList.add("selected");
+    } else {
+      card.classList.remove("selected");
+    }
+  });
+}
+
+// ===============================
+// Product Card Rendering (with selection)
+// ===============================
+
+// Save the original renderProductCards if it exists
+const originalRenderProductCards =
+  typeof renderProductCards === "function" ? renderProductCards : null;
+
+// Render product cards and enable selection
+function renderProductCards(products) {
+  allProducts = products;
+  const container = document.getElementById("product-cards");
+  container.innerHTML = "";
+  products.forEach((product) => {
+    const card = document.createElement("div");
+    card.className = "product-card";
+    card.setAttribute("data-id", product.id);
+    card.style.cursor = "pointer";
+    card.innerHTML = `
+      <img src="${product.image}" alt="${product.name}" style="width:60px;height:60px;object-fit:cover;border-radius:12px;box-shadow:0 2px 8px #0002;">
+      <div style="margin-top:8px;font-weight:bold;">${product.name}</div>
+      <div style="font-size:0.95em;color:#555;">${product.category}</div>
+    `;
+    // Highlight if selected
+    if (selectedProductIds.includes(product.id)) {
+      card.classList.add("selected");
+    }
+    // Click to select/unselect
+    card.addEventListener("click", () => {
+      toggleProductSelection(product.id);
+    });
+    container.appendChild(card);
+  });
+  updateProductCardHighlights();
+}
+
+// ===============================
+// On page load, ensure selected products section is rendered
+// ===============================
+document.addEventListener("DOMContentLoaded", () => {
+  renderSelectedProducts();
+});
+
 const quizQuestionsDiv = document.getElementById("quiz-questions");
 
 let quizStarted = false;

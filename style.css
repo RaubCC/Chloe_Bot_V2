@@ -1,3 +1,10 @@
+/* Highlight selected product card */
+.product-card.selected {
+  border: 3px solid #ff003b;
+  box-shadow: 0 0 12px #ff003b55;
+  background: #fff7f9;
+  transition: border 0.2s, box-shadow 0.2s, background 0.2s;
+}
 /* Radio Console Search Bar */
 #radio-search-bar {
   background: #222;
